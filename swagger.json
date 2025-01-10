@@ -1,0 +1,79 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "Backend Intelecto API",
+      "version": "1.0.0",
+      "description": "Documentación de la API para el proyecto Backend Intelecto."
+    },
+    "servers": [
+      {
+        "url": "http://localhost:5000",
+        "description": "Servidor local"
+      }
+    ],
+    "paths": {
+      "/api/users": {
+        "get": {
+          "summary": "Obtener todos los usuarios",
+          "description": "Devuelve una lista de usuarios.",
+          "responses": {
+            "200": {
+              "description": "Lista de usuarios",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "Id": { "type": "integer" },
+                        "Name": { "type": "string" },
+                        "Email": { "type": "string" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "post": {
+          "summary": "Crear un nuevo usuario",
+          "description": "Crea un nuevo usuario con los datos proporcionados.",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": { "type": "string" },
+                    "email": { "type": "string" },
+                    "password": { "type": "string" }
+                  },
+                  "required": ["name", "email", "password"]
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Usuario creado correctamente",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "message": { "type": "string" },
+                      "userId": { "type": "integer" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  

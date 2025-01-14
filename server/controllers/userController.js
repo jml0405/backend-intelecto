@@ -1,15 +1,18 @@
 const Usuario = require('../models/userModel');
 
-// Crear un usuario
 exports.createUser = async (req, res) => {
-    try {
-        const nuevoUsuario = new Usuario(req.body);
-        const usuarioGuardado = await nuevoUsuario.save();
-        res.status(201).json(usuarioGuardado);
-    } catch (error) {
-        res.status(400).json({ error: error.message });
-    }
+  try {
+    console.log('Datos recibidos:', req.body); // Log para depurar los datos recibidos
+    const nuevoUsuario = new Usuario(req.body);
+    const usuarioGuardado = await nuevoUsuario.save();
+    console.log('Usuario creado:', usuarioGuardado); // Log para confirmar la creación
+    res.status(201).json(usuarioGuardado);
+  } catch (error) {
+    console.error('Error al crear usuario:', error.message); // Log para errores
+    res.status(400).json({ error: error.message });
+  }
 };
+
 
 // Obtener todos los usuarios
 exports.getUsers = async (req, res) => {

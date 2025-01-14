@@ -29,7 +29,7 @@ const userController = require('../controllers/userController');
  *                   Imagen:
  *                     type: string
  */
-router.get('/usuarios', userController.getUsers); // Obtener todos los usuarios
+router.get('/users', userController.getUsers); // Obtener todos los usuarios
 
 /**
  * @swagger
@@ -71,7 +71,7 @@ router.get('/usuarios', userController.getUsers); // Obtener todos los usuarios
  *                 userId:
  *                   type: string
  */
-router.post('/usuarios', userController.createUser); // Crear un nuevo usuario
+router.post('/users', userController.createUser); // Crear un nuevo usuario
 
 /**
  * @swagger
@@ -104,7 +104,7 @@ router.post('/usuarios', userController.createUser); // Crear un nuevo usuario
  *                 Imagen:
  *                   type: string
  */
-router.get('/usuarios/:id', userController.getUserById); // Obtener un usuario por ID
+router.get('/users/:id', userController.getUserById); // Obtener un usuario por ID
 
 /**
  * @swagger
@@ -146,7 +146,7 @@ router.get('/usuarios/:id', userController.getUserById); // Obtener un usuario p
  *                 message:
  *                   type: string
  */
-router.put('/usuarios/:id', userController.updateUser); // Actualizar un usuario por ID
+router.put('/users/:id', userController.updateUser); // Actualizar un usuario por ID
 
 /**
  * @swagger
@@ -171,6 +171,6 @@ router.put('/usuarios/:id', userController.updateUser); // Actualizar un usuario
  *                 message:
  *                   type: string
  */
-router.delete('/usuarios/:id', userController.deleteUser); // Eliminar un usuario por ID
+router.delete('/users/:id', userController.deleteUser); // Eliminar un usuario por ID
 
 module.exports = router;

@@ -2,11 +2,13 @@ require('dotenv').config();
 const express = require('express');
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsdoc = require('swagger-jsdoc');
-const { MongoClient, ServerApiVersion } = require('mongodb'); // Importa MongoClient y ServerApiVersion
+const mongoose = require('mongoose'); // Usamos Mongoose para la conexión
 const userRoutes = require('./server/routes/userRoutes');
 const bookRoutes = require('./server/routes/bookRoutes');
-const genreRoutes = require('./server/routes/genreRoutes.js');
+const genreRoutes = require('./server/routes/genreRoutes');
 const authRoutes = require('./server/routes/authRoutes');
+const estadoLibroRoutes = require('./server/routes/estadoLibroRoutes');
+const metodoPagoRoutes = require('./server/routes/metodoPagoRoutes');
 
 // Obtiene la URI de MongoDB y el puerto desde las variables de entorno
 const uri = process.env.MONGODB_URI;
@@ -29,7 +31,7 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: `http://localhost:${PORT}`, // Utiliza el puerto del servidor
+        url: `http://localhost:${PORT}`,
         description: 'Servidor local',
       },
     ],
@@ -44,55 +46,31 @@ app.use('/api', userRoutes);
 app.use('/api', bookRoutes);
 app.use('/api', genreRoutes);
 app.use('/api', authRoutes);
+app.use('/api', estadoLibroRoutes);
+app.use('/api', metodoPagoRoutes);
 
 // Usar Swagger UI para exponer la documentación
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-// Función para conectar a MongoDB
+// Conexión a MongoDB con Mongoose
 async function connectToDatabase() {
-  const client = new MongoClient(uri, {
-    serverApi: {
-      version: ServerApiVersion.v1,
-      strict: true,
-      deprecationErrors: true,
-    },
-    connectTimeoutMS: 30000, // Tiempo de espera para conectar (30 segundos)
-    socketTimeoutMS: 30000,  // Tiempo de espera para operaciones (30 segundos)
-  });
-
   try {
-    // Conecta el cliente a MongoDB
-    await client.connect();
-    console.log('Conectado a MongoDB Atlas');
-
-    // Envía un ping para verificar la conexión
-    await client.db('admin').command({ ping: 1 });
-    console.log('Ping a MongoDB exitoso');
-
-    // Guarda la referencia a la base de datos en app.locals
-    const db = client.db('Intelecto'); // Cambia el nombre de la base de datos si es necesario
-    app.locals.db = db;
-
-    return client; // Retorna el cliente conectado
+    await mongoose.connect(uri, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      serverSelectionTimeoutMS: 30000, // Ajusta el tiempo de espera
+    });
+    console.log('Conectado a MongoDB con Mongoose');
   } catch (error) {
-    console.error('Error al conectar a MongoDB Atlas:', error);
+    console.error('Error al conectar a MongoDB:', error);
     process.exit(1); // Sale del proceso si hay un error crítico
   }
 }
 
-// Llamada a la función para conectar a la base de datos y luego iniciar el servidor
-connectToDatabase().then((client) => {
-  // Inicia el servidor solo después de conectar a la base de datos
+// Llama a la función para conectar a la base de datos y luego iniciar el servidor
+connectToDatabase().then(() => {
   app.listen(PORT, () => {
     console.log(`Servidor iniciado en el puerto ${PORT}`);
     console.log(`Documentación disponible en http://localhost:${PORT}/api-docs`);
-  });
-
-  // Maneja el cierre del cliente de MongoDB cuando el proceso termina
-  process.on('SIGINT', async () => {
-    console.log('Cerrando conexión a MongoDB...');
-    await client.close();
-    console.log('Conexión a MongoDB cerrada');
-    process.exit(0);
   });
 });

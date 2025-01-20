@@ -9,6 +9,7 @@ const genreRoutes = require('./server/routes/genreRoutes');
 const authRoutes = require('./server/routes/authRoutes');
 const estadoLibroRoutes = require('./server/routes/estadoLibroRoutes');
 const metodoPagoRoutes = require('./server/routes/metodoPagoRoutes');
+const loanRoutes = require('./server/routes/loanRoutes');
 
 // Obtiene la URI de MongoDB y el puerto desde las variables de entorno
 const uri = process.env.MONGODB_URI;
@@ -48,6 +49,7 @@ app.use('/api', genreRoutes);
 app.use('/api', authRoutes);
 app.use('/api', estadoLibroRoutes);
 app.use('/api', metodoPagoRoutes);
+app.use ('/api', loanRoutes);
 
 // Usar Swagger UI para exponer la documentación
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));

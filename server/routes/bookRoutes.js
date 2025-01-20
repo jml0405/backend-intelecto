@@ -72,10 +72,6 @@ router.get('/libros', libroController.getLibros); // Obtener todos los libros
  *                 type: number
  *               Portada:
  *                 type: string
- *               ID_Estado_Libro:
- *                 type: string
- *               ID_Genero:
- *                 type: string
  *     responses:
  *       201:
  *         description: Libro creado correctamente
@@ -170,10 +166,6 @@ router.get('/libros/:id', libroController.getLibroById); // Obtener un libro por
  *               Rating:
  *                 type: number
  *               Portada:
- *                 type: string
- *               ID_Estado_Libro:
- *                 type: string
- *               ID_Genero:
  *                 type: string
  *     responses:
  *       200:

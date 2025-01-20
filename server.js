@@ -9,6 +9,11 @@ const genreRoutes = require('./server/routes/genreRoutes');
 const authRoutes = require('./server/routes/authRoutes');
 const estadoLibroRoutes = require('./server/routes/estadoLibroRoutes');
 const metodoPagoRoutes = require('./server/routes/metodoPagoRoutes');
+const estadoPrestamoRoutes = require('./server/routes/loanStatusRoutes');
+const ratingRoutes = require('./server/routes/ratingRoutes');
+const reservationRoutes = require('./server/routes/reservationRoutes');
+const forumRoutes = require('./server/routes/forumRoutes');
+const responseRoutes = require('./server/routes/responseRoutes');
 const loanRoutes = require('./server/routes/loanRoutes');
 
 // Obtiene la URI de MongoDB y el puerto desde las variables de entorno
@@ -49,6 +54,11 @@ app.use('/api', genreRoutes);
 app.use('/api', authRoutes);
 app.use('/api', estadoLibroRoutes);
 app.use('/api', metodoPagoRoutes);
+app.use('/api', estadoPrestamoRoutes);
+app.use('/api', ratingRoutes);
+app.use('/api', reservationRoutes);
+app.use('/api', forumRoutes);
+app.use('/api', responseRoutes);
 app.use ('/api', loanRoutes);
 
 // Usar Swagger UI para exponer la documentación

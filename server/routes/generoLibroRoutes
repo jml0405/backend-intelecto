@@ -1,0 +1,11 @@
+const express = require('express');
+const router = express.Router();
+const generoLibroController = require('../controllers/generoLibroController');
+
+// Crear una nueva relación entre libro y género
+router.post('/genero_libro', generoLibroController.createGeneroLibro);
+
+// Obtener todas las relaciones entre libros y géneros
+router.get('/genero_libro', generoLibroController.getGeneroLibros);
+
+module.exports = router;

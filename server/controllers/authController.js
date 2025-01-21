@@ -1,4 +1,3 @@
-const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const Usuario = require('../models/userModel'); // Asegúrate de usar el modelo correcto
 
@@ -8,13 +7,15 @@ exports.login = async (req, res) => {
 
     try {
         // Buscar al usuario en la base de datos
+        
         const usuario = await Usuario.findOne({ Correo: correo });
         if (!usuario) {
-            return res.status(400).json({ error: 'Correo o contraseña incorrectos' });
+            return res.status(400).json({ error: 'Correo o contraseña incorrectos' }
+            );
         }
 
         // Comparar la contraseña ingresada con la almacenada en la base de datos
-        const isMatch = await bcrypt.compare(contrasena, usuario.Contraseña);
+        const isMatch = await contrasena === usuario.Contraseña;
         if (!isMatch) {
             return res.status(400).json({ error: 'Correo o contraseña incorrectos' });
         }

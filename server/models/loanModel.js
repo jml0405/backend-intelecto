@@ -13,22 +13,30 @@ const prestamoSchema = new mongoose.Schema({
   },
   Fecha_Prest: { 
     type: Date, 
-    default: Date.now // Fecha del préstamo (se asigna automáticamente si no se proporciona)
+    default: Date.now // Fecha de préstamo asignada automáticamente
   },
   Fecha_Devol: { 
     type: Date, 
-    required: false // Fecha de devolución (puede ser opcional inicialmente)
+    default: function () {
+      return new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // Fecha de devolución 7 días después
+    }
   },
   ID_Estado: { 
     type: mongoose.Schema.Types.ObjectId, 
-    ref: 'Estado_Prestamo', 
+    ref: 'EstadoPrestamo', 
     required: true // Un préstamo tiene un estado específico
   },
-  ID_Factura: { 
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: 'Factura', 
-    required: false // Opcional en caso de que no se genere factura inmediatamente
+  MetodoPago: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'MetodoPago',
+    required: true // El método de pago es obligatorio
+  },
+  Monto: {
+    type: Number,
+    required: true, // Monto del préstamo
+    min: 0 // Validación: no puede ser negativo
   }
 });
 
 module.exports = mongoose.model('Prestamo', prestamoSchema);
+

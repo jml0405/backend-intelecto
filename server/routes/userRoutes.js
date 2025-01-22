@@ -1,6 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
+const multer = require('multer');
+const path = require('path');
+
+// Rutas de Usuarios
 
 /**
  * @swagger
@@ -172,5 +176,60 @@ router.put('/users/:id', userController.updateUser); // Actualizar un usuario po
  *                   type: string
  */
 router.delete('/users/:id', userController.deleteUser); // Eliminar un usuario por ID
+
+/**
+ * @swagger
+ * /api/users/{id}/password:
+ *   patch:
+ *     summary: Actualizar contraseña de un usuario
+ *     description: Actualiza solo el campo de contraseña para un usuario.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Contraseña actualizada correctamente
+ */
+router.patch('/users/:id/password', userController.updatePassword); // Actualizar contraseña
+
+/**
+ * @swagger
+ * /api/users/{id}/upload-image:
+ *   post:
+ *     summary: Subir una imagen para un usuario
+ *     description: Subir y asignar una imagen a un usuario.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               image:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       200:
+ *         description: Imagen subida correctamente
+ */
+router.post('/users/:id/upload-image', userController.uploadUserImage); // Subir imagen de usuario
 
 module.exports = router;

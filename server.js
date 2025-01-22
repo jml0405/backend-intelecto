@@ -3,6 +3,9 @@ const express = require('express');
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsdoc = require('swagger-jsdoc');
 const mongoose = require('mongoose'); // Usamos Mongoose para la conexión
+
+const cors = require('cors');
+
 const userRoutes = require('./server/routes/userRoutes');
 const bookRoutes = require('./server/routes/bookRoutes');
 const genreRoutes = require('./server/routes/genreRoutes');
@@ -28,6 +31,12 @@ const app = express();
 
 // Middleware para manejar JSON
 app.use(express.json({ limit: '1mb' })); // Límite de tamaño para manejar JSON
+
+app.use(cors({
+  origin: '*', // Allows all origins. Replace '*' with specific origins for more security.
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
+  allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
+}));
 
 // Configuración de Swagger-JSDoc
 const swaggerOptions = {
@@ -75,7 +84,7 @@ async function connectToDatabase() {
   try {
     await mongoose.connect(uri, {
       useNewUrlParser: true,
-      useUnifiedTopology: true,
+      useUnifiedTopology: true, 
       serverSelectionTimeoutMS: 30000, // Ajusta el tiempo de espera
     });
     console.log('Conectado a MongoDB con Mongoose');

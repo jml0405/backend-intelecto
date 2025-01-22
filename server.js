@@ -3,7 +3,7 @@ const express = require('express');
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsdoc = require('swagger-jsdoc');
 const mongoose = require('mongoose'); // Usamos Mongoose para la conexión
-
+const path = require('path')
 const cors = require('cors');
 
 const userRoutes = require('./server/routes/userRoutes');
@@ -32,6 +32,8 @@ const app = express();
 // Middleware para manejar JSON
 app.use(express.json({ limit: '1mb' })); // Límite de tamaño para manejar JSON
 
+// Exponer la carpeta.
+app.use('/server/uploads', express.static(path.join(_dirname,)))
 app.use(cors({
   origin: '*', // Allows all origins. Replace '*' with specific origins for more security.
   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods

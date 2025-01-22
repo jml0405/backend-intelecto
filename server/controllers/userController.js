@@ -5,7 +5,7 @@ const Usuario = require('../models/userModel');
 // Configuración de Multer para subir imágenes
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-      cb(null, path.join(__dirname, '../uploads/')); // Carpeta donde se guardarán las imágenes, relativa al proyecto
+      cb(null, path.join(__dirname, '../uploads/perfil/')); // Carpeta donde se guardarán las imágenes, relativa al proyecto
     },
     filename: (req, file, cb) => {
       const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
@@ -109,7 +109,7 @@ const storage = multer.diskStorage({
           return res.status(400).json({ error: 'No se recibió ninguna imagen' });
         }
   
-        const imageUrl = `/uploads/${req.file.filename}`;
+        const imageUrl = `/uploads/perfil/${req.file.filename}`;
         const usuarioActualizado = await Usuario.findByIdAndUpdate(
           req.params.id,
           { Imagen: imageUrl }, // Actualiza el campo "Imagen" en el modelo

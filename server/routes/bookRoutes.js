@@ -205,4 +205,39 @@ router.put('/libros/:id', libroController.updateLibro); // Actualizar un libro p
  */
 router.delete('/libros/:id', libroController.deleteLibro); // Eliminar un libro por ID
 
+/**
+ * @swagger
+ * /api/libros/{id}/portada:
+ *   post:
+ *     summary: Actualizar la portada de un libro
+ *     description: Sube una nueva imagen de portada para un libro específico.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               portada:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       200:
+ *         description: Portada actualizada correctamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ */
+router.post('/libros/:id/portada', libroController.updatePortada); // Actualizar portada
+
 module.exports = router;

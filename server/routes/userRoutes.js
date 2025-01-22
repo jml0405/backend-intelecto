@@ -1,8 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
-const multer = require('multer');
-const path = require('path');
 
 // Rutas de Usuarios
 

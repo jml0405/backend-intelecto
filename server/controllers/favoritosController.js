@@ -1,32 +1,41 @@
 const Favoritos = require('../models/favoritosModel');
 
-// Agregar un libro a favoritos
-exports.addToFavorites = async (req, res) => {
+// Agregar o actualizar un libro en favoritos o lectura
+exports.addOrUpdateStatus = async (req, res) => {
   try {
-    const { userId, bookId } = req.body;
+    const { userId, bookId, isFavorite, isReading } = req.body;
 
-    // Verificar si ya existe el favorito
-    const existeFavorito = await Favoritos.findOne({ usuario: userId, libro: bookId });
-    if (existeFavorito) {
-      return res.status(400).json({ error: 'El libro ya está en favoritos' });
+    // Verificar si ya existe el registro
+    let favorito = await Favoritos.findOne({ usuario: userId, libro: bookId });
+
+    if (favorito) {
+      // Actualizar los estados de favorito y lectura
+      favorito.isFavorite = isFavorite !== undefined ? isFavorite : favorito.isFavorite;
+      favorito.isReading = isReading !== undefined ? isReading : favorito.isReading;
+      await favorito.save();
+    } else {
+      // Crear un nuevo registro si no existe
+      favorito = new Favoritos({
+        usuario: userId,
+        libro: bookId,
+        isFavorite: isFavorite || false,
+        isReading: isReading || false,
+      });
+      await favorito.save();
     }
 
-    // Crear un nuevo favorito
-    const nuevoFavorito = new Favoritos({ usuario: userId, libro: bookId });
-    await nuevoFavorito.save();
-
-    res.status(200).json({ message: 'Libro agregado a favoritos', favorito: nuevoFavorito });
+    res.status(200).json({ message: 'Estado actualizado correctamente', favorito });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
-// Listar libros favoritos de un usuario
-exports.getFavorites = async (req, res) => {
+// Listar libros favoritos y en lectura de un usuario
+exports.getFavoritesAndReading = async (req, res) => {
   try {
     const { userId } = req.params;
 
-    // Buscar todos los favoritos del usuario y popular los datos del libro
+    // Buscar todos los libros marcados como favoritos o en lectura del usuario
     const favoritos = await Favoritos.find({ usuario: userId }).populate('libro');
 
     res.status(200).json({ favoritos });
@@ -35,18 +44,18 @@ exports.getFavorites = async (req, res) => {
   }
 };
 
-// Eliminar un libro de favoritos
-exports.removeFromFavorites = async (req, res) => {
+// Eliminar un libro de favoritos o lectura
+exports.removeFromFavoritesOrReading = async (req, res) => {
   try {
     const { userId, bookId } = req.body;
 
-    // Buscar y eliminar el favorito
+    // Buscar y eliminar el registro
     const eliminado = await Favoritos.findOneAndDelete({ usuario: userId, libro: bookId });
     if (!eliminado) {
-      return res.status(404).json({ error: 'El libro no está en favoritos' });
+      return res.status(404).json({ error: 'El libro no está en favoritos o lectura' });
     }
 
-    res.status(200).json({ message: 'Libro eliminado de favoritos' });
+    res.status(200).json({ message: 'Libro eliminado de favoritos o lectura' });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

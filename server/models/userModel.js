@@ -1,12 +1,11 @@
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
-    Nombre: { type: String, required: true },
-    Correo: { type: String, required: true, unique: true },
-    Telefono: { type: String },
-    Contraseña: { type: String, required: true },
-    Imagen: { type: String } // URL a la imagen del usuario
+  username: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  favoritos: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Libro' }], // Relación con los libros
 });
 
-// Exportar el modelo
 module.exports = mongoose.model('Usuario', userSchema);
+

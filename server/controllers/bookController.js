@@ -36,7 +36,7 @@ const generarHashArchivo = (filePath) => {
 
 // Función para eliminar la imagen anterior
 const eliminarImagenAnterior = async (portadaActual) => {
-  if (portadaActual && portadaActual !== '/uploads/portadas/default_cover.png') {
+  if (portadaActual && portadaActual !== '/uploads/portadas/default_cover.jpg') {
 
     const coverPath = path.join(__dirname, '..', portadaActual);
    if (fs.existsSync(coverPath)) {
@@ -54,14 +54,13 @@ const eliminarImagenAnterior = async (portadaActual) => {
 
 // Crear un libro
 exports.createLibro = [
-  upload.single('portada'), // Middleware de multer
   async (req, res) => {
     try {
-      const portadaUrl = req.file ? `/uploads/portadas/${req.params.id}_coverimage${path.extname(req.file.originalname)}` : null;
+      const defaultCover = '/uploads/portadas/default_cover.jpg';
 
       const nuevoLibro = new Libro({
         ...req.body,
-        Portada: portadaUrl,
+        Portada: defaultCover,
       });
 
       const libroGuardado = await nuevoLibro.save();

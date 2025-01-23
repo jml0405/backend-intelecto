@@ -1,62 +1,80 @@
-const Favoritos = require('../models/favoritosModel');
+const Favoritos = require('../models/favoriteModel');
 
-// Agregar o actualizar un libro en favoritos o lectura
+// Agregar o actualizar el estado de un libro (favorito o lectura)
 exports.addOrUpdateStatus = async (req, res) => {
-  try {
-    const { userId, bookId, isFavorite, isReading } = req.body;
+  const { usuario, libro, isFavorite, isReading } = req.body;
 
-    // Verificar si ya existe el registro
-    let favorito = await Favoritos.findOne({ usuario: userId, libro: bookId });
+  try {
+    // Buscar si ya existe una entrada para este usuario y libro
+    let favorito = await Favoritos.findOne({ usuario, libro });
 
     if (favorito) {
-      // Actualizar los estados de favorito y lectura
-      favorito.isFavorite = isFavorite !== undefined ? isFavorite : favorito.isFavorite;
-      favorito.isReading = isReading !== undefined ? isReading : favorito.isReading;
-      await favorito.save();
+      // Si existe, actualizar los estados
+      if (isFavorite !== undefined) {
+        favorito.isFavorite = isFavorite;
+      }
+      if (isReading !== undefined) {
+        favorito.isReading = isReading;
+      }
     } else {
-      // Crear un nuevo registro si no existe
+      // Si no existe, crear una nueva entrada
       favorito = new Favoritos({
-        usuario: userId,
-        libro: bookId,
-        isFavorite: isFavorite || false,
-        isReading: isReading || false,
+        usuario,
+        libro,
+        isFavorite: isFavorite || false, // Por defecto, false si no se proporciona
+        isReading: isReading || false,   // Por defecto, false si no se proporciona
       });
-      await favorito.save();
     }
 
-    res.status(200).json({ message: 'Estado actualizado correctamente', favorito });
+    // Guardar los cambios
+    await favorito.save();
+
+    res.status(200).json({
+      message: "Estado del libro actualizado correctamente.",
+      data: favorito,
+    });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error("Error al agregar o actualizar el estado del libro:", error);
+    res.status(500).json({ error: "Error al procesar la solicitud." });
   }
 };
 
-// Listar libros favoritos y en lectura de un usuario
+// Obtener los libros favoritos y en lectura de un usuario
 exports.getFavoritesAndReading = async (req, res) => {
+  const { userId } = req.params;
+
   try {
-    const { userId } = req.params;
+    const favoritos = await Favoritos.find({ usuario: userId })
+      .populate('libro') // Popula los detalles del libro
+      .exec();
 
-    // Buscar todos los libros marcados como favoritos o en lectura del usuario
-    const favoritos = await Favoritos.find({ usuario: userId }).populate('libro');
-
-    res.status(200).json({ favoritos });
+    res.status(200).json({
+      message: "Libros favoritos y en lectura obtenidos correctamente.",
+      data: favoritos,
+    });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error("Error al obtener los libros favoritos y en lectura:", error);
+    res.status(500).json({ error: "Error al procesar la solicitud." });
   }
 };
 
 // Eliminar un libro de favoritos o lectura
 exports.removeFromFavoritesOrReading = async (req, res) => {
-  try {
-    const { userId, bookId } = req.body;
+  const { usuario, libro } = req.body;
 
-    // Buscar y eliminar el registro
-    const eliminado = await Favoritos.findOneAndDelete({ usuario: userId, libro: bookId });
-    if (!eliminado) {
-      return res.status(404).json({ error: 'El libro no está en favoritos o lectura' });
+  try {
+    const favorito = await Favoritos.findOneAndDelete({ usuario, libro });
+
+    if (!favorito) {
+      return res.status(404).json({ error: "El libro no está en la lista de favoritos o lectura." });
     }
 
-    res.status(200).json({ message: 'Libro eliminado de favoritos o lectura' });
+    res.status(200).json({
+      message: "Libro eliminado de favoritos o lectura correctamente.",
+      data: favorito,
+    });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error("Error al eliminar el libro de favoritos o lectura:", error);
+    res.status(500).json({ error: "Error al procesar la solicitud." });
   }
 };

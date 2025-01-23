@@ -114,7 +114,7 @@ router.get('/favorites/:userId', favoritosController.getFavoritesAndReading);
  * /api/favorites:
  *   delete:
  *     summary: Eliminar un libro de favoritos o lectura
- *     description: Elimina un libro del estado de favoritos o lectura de un usuario.
+ *     description: Actualiza el estado de un libro para que ya no esté marcado como favorito ni en lectura.
  *     tags: [Favoritos]
  *     requestBody:
  *       required: true
@@ -131,7 +131,7 @@ router.get('/favorites/:userId', favoritosController.getFavoritesAndReading);
  *                 description: ID del libro.
  *     responses:
  *       200:
- *         description: Libro eliminado correctamente.
+ *         description: Estado del libro actualizado correctamente.
  *         content:
  *           application/json:
  *             schema:

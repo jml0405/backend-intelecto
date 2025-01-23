@@ -58,19 +58,28 @@ exports.getFavoritesAndReading = async (req, res) => {
   }
 };
 
-// Eliminar un libro de favoritos o lectura
+// Eliminar un libro de favoritos o lectura (actualizando ambos estados a false)
+// Eliminar un libro de favoritos o lectura (actualizando ambos estados a false)
 exports.removeFromFavoritesOrReading = async (req, res) => {
   const { usuario, libro } = req.body;
 
   try {
-    const favorito = await Favoritos.findOneAndDelete({ usuario, libro });
+    // Buscar la entrada del libro para el usuario
+    const favorito = await Favoritos.findOne({ usuario, libro });
 
     if (!favorito) {
       return res.status(404).json({ error: "El libro no está en la lista de favoritos o lectura." });
     }
 
+    // Actualizar ambos estados a false
+    favorito.isFavorite = false;
+    favorito.isReading = false;
+
+    // Guardar los cambios
+    await favorito.save();
+
     res.status(200).json({
-      message: "Libro eliminado de favoritos o lectura correctamente.",
+      message: "Libro eliminado de favoritos y lectura correctamente.",
       data: favorito,
     });
   } catch (error) {

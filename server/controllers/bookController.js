@@ -4,9 +4,10 @@ const Libro = require('../models/bookModel.js');
 const multer = require('multer');
 const path = require('path');
 
+// Configuración de Multer para subir imágenes
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, path.join(__dirname, '../uploads/portadas/')); // Carpeta específica para portadas
+    cb(null, path.join(__dirname, '../uploads/portadas/')); // Carpeta donde se guardarán las imágenes
   },
   filename: (req, file, cb) => {
     const filename = `${req.params.id || Date.now()}_coverimage${path.extname(file.originalname)}`;
@@ -14,7 +15,21 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({ storage });
+const upload = multer({
+  storage,
+  fileFilter: (req, file, cb) => {
+    const fileTypes = /jpeg|jpg|png/; // Extensiones permitidas
+    const extname = fileTypes.test(path.extname(file.originalname).toLowerCase());
+    const mimetype = fileTypes.test(file.mimetype);
+
+    if (extname && mimetype) {
+      return cb(null, true);
+    } else {
+      cb(new Error('Solo se permiten imágenes en formato JPEG, JPG o PNG'));
+    }
+  },
+  limits: { fileSize: 2 * 1024 * 1024 }, // Límite de tamaño: 2MB
+});
 
 // Generar hash de un archivo
 const generarHashArchivo = (filePath) => {
@@ -42,7 +57,7 @@ const eliminarImagenAnterior = async (portadaActual, nuevaRuta) => {
   }
 };
 
-// Crear un libro con imagen obligatoria
+// Crear un libro con selección obligatoria de imagen
 exports.createLibro = [
   upload.single('portada'), // Middleware de multer para subir la imagen
   async (req, res) => {

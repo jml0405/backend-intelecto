@@ -31,6 +31,36 @@ const ratingController = require('../controllers/ratingController');
  */
 router.get('/ratings', ratingController.getRatings);
 
+
+/**
+ * @swagger
+ * /api/ratings/libro/{idLibro}:
+ *   get:
+ *     summary: Obtener reseñas por ID de libro
+ *     description: Devuelve una lista de reseñas asociadas a un libro específico.
+ *     tags: [Ratings]
+ *     parameters:
+ *       - in: path
+ *         name: idLibro
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID del libro
+ *     responses:
+ *       200:
+ *         description: Lista de reseñas
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Rating'
+ *       500:
+ *         description: Error del servidor
+ */
+router.get("/ratings/libro/:idLibro", ratingController.getRatingsByLibro);
+
+
 /**
  * @swagger
  * /api/ratings:

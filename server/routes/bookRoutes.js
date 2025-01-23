@@ -92,7 +92,7 @@ router.post('/libros', libroController.createLibro); // Crear un nuevo libro
  * /api/libros/{id}:
  *   get:
  *     summary: Obtener un libro por ID
- *     description: Obtiene los datos de un libro por su ID.
+ *     description: Obtiene los datos de un libro por su ID, incluyendo sus géneros relacionados.
  *     parameters:
  *       - in: path
  *         name: id
@@ -127,6 +127,11 @@ router.post('/libros', libroController.createLibro); // Crear un nuevo libro
  *                   type: number
  *                 Portada:
  *                   type: string
+ *                 generos:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                   description: Lista de géneros asociados al libro.
  */
 router.get('/libros/:id', libroController.getLibroById); // Obtener un libro por ID
 

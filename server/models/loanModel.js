@@ -46,7 +46,7 @@ const prestamoSchema = new mongoose.Schema({
 // Pre-hook para generar el Código antes de la validación
 prestamoSchema.pre('validate', function (next) {
   if (!this.Codigo) {
-    this.Codigo = Math.floor(100000 + Math.random() * 900000).toString(); // Genera un número aleatorio de 6 dígitos
+    this.Codigo = Math.floor(100000 + Math.random() * 900000).toString(); // Genera un número de 6 dígitos
   }
   next();
 });

@@ -6,6 +6,7 @@ const libroSchema = new mongoose.Schema({
   Editorial: { type: String },
   ISBN: { type: String },
   Paginas: { type: Number },
+  Dimensiones: { type: String },
   Fecha_Publ: { type: Date },
   Idioma: { type: String },
   Rating: { type: Number, default: 0 }, // Valor predeterminado para rating

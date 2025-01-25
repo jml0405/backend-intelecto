@@ -177,5 +177,5 @@ router.put('/prestamos/:id', prestamoController.updatePrestamo);
  *         description: Préstamo no encontrado.
  */
 router.delete('/prestamos/:id', prestamoController.deletePrestamo);
-
+router.get('/prestamos/usuario/:userID', prestamoController.getPrestamosByUserID);
 module.exports = router;

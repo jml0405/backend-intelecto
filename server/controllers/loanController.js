@@ -81,3 +81,23 @@ exports.deletePrestamo = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+exports.getPrestamosByUserID = async (req, res) => {
+  const { userID } = req.params;
+
+  try {
+    const prestamos = await Prestamo.find({ ID_Estudiante: userID })
+      .populate('ID_Estudiante', 'Nombre Correo') // Ajustar los campos según el modelo Usuario
+      .populate('ID_Libro', 'Titulo Autor') // Ajustar los campos según el modelo Libro
+      .populate('ID_Estado', 'Estado') // Ajustar los campos según el modelo Estado_Prestamo
+      .populate('MetodoPago', 'Metodo'); // Ajustar los campos según el modelo MetodoPago
+
+    if (prestamos.length === 0) {
+      return res.status(404).json({ message: 'No se encontraron préstamos para este usuario' });
+    }
+
+    res.status(200).json(prestamos);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};

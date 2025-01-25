@@ -4,7 +4,7 @@ const foroController = require('../controllers/forumController');
 
 /**
  * @swagger
- * /api/foros:
+ *  :
  *   get:
  *     summary: Obtener todos los foros
  *     responses:
